@@ -169,20 +169,39 @@ export default function TalentScaleAI() {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleCalculate = async () => {
-    setIsCalculating(true);
-  await new Promise(r => setTimeout(r, 1000));
+const handleCalculate = async () => {
+setIsCalculating(true);
+
+await new Promise(r => setTimeout(r, 1000));
+
+const calculated = calculateTAStructure(inputs);
+
+setResult(calculated);
 
 setMessages(prev => [
-  ...prev,
-  {
-    role: "assistant",
-    content:
-      "AI backend will be connected after backend deployment."
-  }
+...prev,
+{
+role: "assistant",
+content: `✅ Workforce calculation completed successfully.
+
+Recommended TA Team: ${calculated.totalTA}
+
+Hiring Capacity: ${calculated.hiringCapacity} hires/year
+
+Estimated Timeline: ${calculated.timeline}
+
+You can now ask questions about:
+• recruiter distribution
+• optimization
+• benchmarks
+• hiring strategy`
+}
 ]);
 
-    const handleSend = async () => {
+setIsCalculating(false);
+};
+
+const handleSend = async () => {
 if (!chatInput.trim() || isLoading) return;
 
 const userMsg = chatInput.trim();
@@ -197,44 +216,32 @@ setMessages(prev => [
 setIsLoading(true);
 
 try {
-const systemPrompt = `You are TalentScale AI, an expert HR workforce planning assistant specializing in Talent Acquisition team structures for Indian and global tech companies.
-
-Current calculation context:
-${result ? `
-
-* Hiring Target: ${inputs.hiringTarget} (Adjusted: ${result.adjustedHiring})
-* Company Type: ${inputs.companyType}
-* Dropout Ratio: ${inputs.dropoutRatio}%
-* Complexity: ${inputs.complexityFactor}
-* Recruiter Productivity: ${inputs.recruiterProductivity}
-* AI/Niche Hiring: ${inputs.aiNichePercent}%
-* Total TA Team: ${result.totalTA}
-* Junior Recruiters: ${result.juniorRecruiters}
-* Recruiters: ${result.recruiters}
-* Senior Recruiters: ${result.seniorRecruiters}
-* Sourcers: ${result.sourcers}
-* Coordinators: ${result.coordinators}
-* Leads: ${result.leads}
-* Managers: ${result.managers}
-* TA Head: ${result.taHead}
-* Timeline: ${result.timeline}
-* Utilization: ${result.utilization}%
-* Estimated Cost: ${result.estimatedCost}
-  ` : "No calculation done yet."}
-
-Provide concise, expert advice. Use industry benchmarks. Keep answers under 150 words.`;
+await new Promise(r => setTimeout(r, 1000));
 
 ```
-console.log(systemPrompt);
+let response =
+  "AI backend will be connected after backend deployment.";
 
-await new Promise(r => setTimeout(r, 1000));
+if (userMsg.toLowerCase().includes("benchmark")) {
+  response =
+    "Industry benchmark: Product companies typically operate at 28–35 hires per recruiter annually, while consulting firms can reach 45–60 hires.";
+} else if (userMsg.toLowerCase().includes("timeline")) {
+  response =
+    result
+      ? `Based on your current structure, estimated hiring completion timeline is ${result.timeline}.`
+      : "Please calculate your workforce structure first.";
+} else if (userMsg.toLowerCase().includes("cost")) {
+  response =
+    result
+      ? `Estimated annual TA cost is ${result.estimatedCost}.`
+      : "Please calculate your workforce structure first.";
+}
 
 setMessages(prev => [
   ...prev,
   {
     role: "assistant",
-    content:
-      "AI backend will be connected after backend deployment."
+    content: response
   }
 ]);
 ```
