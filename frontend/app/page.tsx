@@ -171,50 +171,7 @@ export default function TalentScaleAI() {
 
   const handleCalculate = async () => {
     setIsCalculating(true);
-    await new Promise(r => setTimeout(r, 600));
-    const res = calculateTAStructure(inputs);
-    setResult(res);
-    setIsCalculating(false);
-
-    const summary = `✅ Calculation complete! For **${inputs.hiringTarget} hires** at a **${inputs.companyType.toUpperCase()}** company with **${inputs.dropoutRatio}% dropout**, you need a team of **${res.totalTA} TA professionals**. That includes ${res.recruiters} core Recruiters, ${res.seniorRecruiters} Senior Recruiters, ${res.juniorRecruiters} Junior Recruiters, and ${res.leads} Team Leads. Estimated timeline: **${res.timeline}**. Ask me anything to dig deeper!`;
-    setMessages(prev => [...prev, { role: "assistant", content: summary }]);
-  };
-
-  const handleSend = async () => {
-    if (!chatInput.trim() || isLoading) return;
-    const userMsg = chatInput.trim();
-    setChatInput("");
-    setMessages(prev => [...prev, { role: "user", content: userMsg }]);
-    setIsLoading(true);
-
-    try {
-      const systemPrompt = `You are TalentScale AI, an expert HR workforce planning assistant specializing in Talent Acquisition team structures for Indian and global tech companies.
-
-Current calculation context:
-${result ? `
-- Hiring Target: ${inputs.hiringTarget} (Adjusted: ${result.adjustedHiring})
-- Company Type: ${inputs.companyType}
-- Dropout Ratio: ${inputs.dropoutRatio}%
-- Complexity: ${inputs.complexityFactor}
-- Recruiter Productivity: ${inputs.recruiterProductivity}
-- AI/Niche Hiring: ${inputs.aiNichePercent}%
-- Total TA Team: ${result.totalTA}
-- Junior Recruiters: ${result.juniorRecruiters}
-- Recruiters: ${result.recruiters}
-- Senior Recruiters: ${result.seniorRecruiters}
-- Sourcers: ${result.sourcers}
-- Coordinators: ${result.coordinators}
-- Leads: ${result.leads}
-- Managers: ${result.managers}
-- TA Head: ${result.taHead}
-- Timeline: ${result.timeline}
-- Utilization: ${result.utilization}%
-- Estimated Cost: ${result.estimatedCost}
-` : "No calculation done yet."}
-
-Provide concise, expert advice. Use industry benchmarks (Naukri, LinkedIn India data). Be specific with numbers. Keep answers under 150 words. Use markdown for formatting.`;
-
-     await new Promise(r => setTimeout(r, 1000));
+  await new Promise(r => setTimeout(r, 1000));
 
 setMessages(prev => [
   ...prev,
@@ -223,31 +180,83 @@ setMessages(prev => [
     content:
       "AI backend will be connected after backend deployment."
   }
-]);, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          system: systemPrompt,
-          messages: [
-            ...messages.filter(m => m.role !== "assistant" || messages.indexOf(m) > 0).slice(-6).map(m => ({
-              role: m.role,
-              content: m.content
-            })),
-            { role: "user", content: userMsg }
-          ]
-        })
-      });
-      const data = await response.json();
-      const reply = data.content?.[0]?.text || "I encountered an error. Please try again.";
-      setMessages(prev => [...prev, { role: "assistant", content: reply }]);
-    } catch {
-      setMessages(prev => [...prev, { role: "assistant", content: "Connection error. Please check your setup and try again." }]);
-    }
-    setIsLoading(false);
-  };
+]);
 
+    const handleSend = async () => {
+if (!chatInput.trim() || isLoading) return;
+
+const userMsg = chatInput.trim();
+
+setChatInput("");
+
+setMessages(prev => [
+...prev,
+{ role: "user", content: userMsg }
+]);
+
+setIsLoading(true);
+
+try {
+const systemPrompt = `You are TalentScale AI, an expert HR workforce planning assistant specializing in Talent Acquisition team structures for Indian and global tech companies.
+
+Current calculation context:
+${result ? `
+
+* Hiring Target: ${inputs.hiringTarget} (Adjusted: ${result.adjustedHiring})
+* Company Type: ${inputs.companyType}
+* Dropout Ratio: ${inputs.dropoutRatio}%
+* Complexity: ${inputs.complexityFactor}
+* Recruiter Productivity: ${inputs.recruiterProductivity}
+* AI/Niche Hiring: ${inputs.aiNichePercent}%
+* Total TA Team: ${result.totalTA}
+* Junior Recruiters: ${result.juniorRecruiters}
+* Recruiters: ${result.recruiters}
+* Senior Recruiters: ${result.seniorRecruiters}
+* Sourcers: ${result.sourcers}
+* Coordinators: ${result.coordinators}
+* Leads: ${result.leads}
+* Managers: ${result.managers}
+* TA Head: ${result.taHead}
+* Timeline: ${result.timeline}
+* Utilization: ${result.utilization}%
+* Estimated Cost: ${result.estimatedCost}
+  ` : "No calculation done yet."}
+
+Provide concise, expert advice. Use industry benchmarks. Keep answers under 150 words.`;
+
+```
+console.log(systemPrompt);
+
+await new Promise(r => setTimeout(r, 1000));
+
+setMessages(prev => [
+  ...prev,
+  {
+    role: "assistant",
+    content:
+      "AI backend will be connected after backend deployment."
+  }
+]);
+```
+
+} catch (error) {
+console.error(error);
+
+```
+setMessages(prev => [
+  ...prev,
+  {
+    role: "assistant",
+    content:
+      "Connection error. Please check your setup and try again."
+  }
+]);
+```
+
+}
+
+setIsLoading(false);
+};
   const pieData = result ? [
     { name: "Junior Rec.", value: result.juniorRecruiters },
     { name: "Recruiters", value: result.recruiters },
