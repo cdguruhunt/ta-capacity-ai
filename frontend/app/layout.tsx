@@ -1,8 +1,9 @@
 import "./globals.css";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "TalentScale AI",
-  description: "AI Workforce Planning Platform",
+  description: "AI Workforce Planning Assistant",
 };
 
 export default function RootLayout({
