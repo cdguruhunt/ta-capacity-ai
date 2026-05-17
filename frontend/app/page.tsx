@@ -216,54 +216,48 @@ setMessages(prev => [
 setIsLoading(true);
 
 try {
-await new Promise(r => setTimeout(r, 1000));
+  await new Promise(r => setTimeout(r, 1000));
 
-```
-let response =
-  "AI backend will be connected after backend deployment.";
+  let response =
+    "AI backend will be connected after backend deployment.";
 
-if (userMsg.toLowerCase().includes("benchmark")) {
-  response =
-    "Industry benchmark: Product companies typically operate at 28–35 hires per recruiter annually, while consulting firms can reach 45–60 hires.";
-} else if (userMsg.toLowerCase().includes("timeline")) {
-  response =
-    result
-      ? `Based on your current structure, estimated hiring completion timeline is ${result.timeline}.`
-      : "Please calculate your workforce structure first.";
-} else if (userMsg.toLowerCase().includes("cost")) {
-  response =
-    result
-      ? `Estimated annual TA cost is ${result.estimatedCost}.`
-      : "Please calculate your workforce structure first.";
-}
-
-setMessages(prev => [
-  ...prev,
-  {
-    role: "assistant",
-    content: response
+  if (userMsg.toLowerCase().includes("benchmark")) {
+    response =
+      "Industry benchmark: Product companies typically operate at 28–35 hires per recruiter annually, while consulting firms can reach 45–60 hires.";
+  } else if (userMsg.toLowerCase().includes("timeline")) {
+    response =
+      result
+        ? `Based on your current structure, estimated hiring completion timeline is ${result.timeline}.`
+        : "Please calculate your workforce structure first.";
+  } else if (userMsg.toLowerCase().includes("cost")) {
+    response =
+      result
+        ? `Estimated annual TA cost is ${result.estimatedCost}.`
+        : "Please calculate your workforce structure first.";
   }
-]);
-```
 
+  setMessages(prev => [
+    ...prev,
+    {
+      role: "assistant",
+      content: response
+    }
+  ]);
 } catch (error) {
-console.error(error);
+  console.error(error);
 
-```
-setMessages(prev => [
-  ...prev,
-  {
-    role: "assistant",
-    content:
-      "Connection error. Please check your setup and try again."
-  }
-]);
-```
-
+  setMessages(prev => [
+    ...prev,
+    {
+      role: "assistant",
+      content:
+        "Connection error. Please check your setup and try again."
+    }
+  ]);
 }
-
 setIsLoading(false);
 };
+  
   const pieData = result ? [
     { name: "Junior Rec.", value: result.juniorRecruiters },
     { name: "Recruiters", value: result.recruiters },
