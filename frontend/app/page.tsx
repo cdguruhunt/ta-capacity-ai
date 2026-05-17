@@ -214,7 +214,16 @@ ${result ? `
 
 Provide concise, expert advice. Use industry benchmarks (Naukri, LinkedIn India data). Be specific with numbers. Keep answers under 150 words. Use markdown for formatting.`;
 
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+     await new Promise(r => setTimeout(r, 1000));
+
+setMessages(prev => [
+  ...prev,
+  {
+    role: "assistant",
+    content:
+      "AI backend will be connected after backend deployment."
+  }
+]);, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
