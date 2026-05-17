@@ -2,7 +2,15 @@
 
 import { useState, useRef, useEffect } from "react";
 import {
-  PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer
 } from "recharts";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
